@@ -6,7 +6,7 @@ using MediatR;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
-using Stash_And_Grab.Application.ApiServices;
+using Stash_And_Grab.Application.ApplicationServices;
 using Stash_And_Grab.Application.Commands;
 using Stash_And_Grab.Application.DtoModels;
 using Stash_And_Grab.Application.Logging;
@@ -17,8 +17,8 @@ namespace Stash_And_Grab.Application.UnitTests.ServiceTests;
 
 public class ApplicationServicesUnitTests
 {
-    private readonly ILoggerAdaptor<ApplicationServices>
-        _logger = Substitute.For<ILoggerAdaptor<ApplicationServices>>();
+    private readonly ILoggerAdaptor<ApplicationServices.ApplicationServices>
+        _logger = Substitute.For<ILoggerAdaptor<ApplicationServices.ApplicationServices>>();
 
     private readonly IMediator _mediator = Substitute.For<IMediator>();
     private readonly IApplicationServices _sut;
@@ -26,7 +26,7 @@ public class ApplicationServicesUnitTests
 
     public ApplicationServicesUnitTests()
     {
-        _sut = new ApplicationServices(_validator, _mediator, _logger);
+        _sut = new ApplicationServices.ApplicationServices(_validator, _mediator, _logger);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class ApplicationServicesUnitTests
         var expected = new Result<ResponseStashItemModel>().WithError("Id not found");
 
         //Act
-        _mediator.Send(Arg.Any<GetStashItemByIdQuery>()).Throws(new ArgumentNullException());
+        _mediator.Send(Arg.Any<GetStashItemByIdQuery>()).ReturnsNullForAnyArgs();
 
         var result = await _sut.GetItem(Guid.NewGuid());
 
@@ -72,7 +72,7 @@ public class ApplicationServicesUnitTests
 
         //Assert
         _logger.Received(1).LogInformation(Arg.Is("Attempting to get stash for {id}"), Arg.Any<Guid>());
-        _logger.Received(1).LogInformation(Arg.Is("Finished attempt to get stash for {id} after {time}"),
+        _logger.Received(1).LogInformation(Arg.Is("Finished attempt to get stash for {id} after {time}ms"),
             Arg.Any<Guid>(), Arg.Any<double>());
     }
 
@@ -126,7 +126,8 @@ public class ApplicationServicesUnitTests
         //Assert
         _logger.Received(1)
             .LogInformation(Arg.Is("Attempting to create stash for {@item}"), Arg.Any<StashCreateDtoModel>());
-        _logger.Received(1).LogInformation(Arg.Is("Finished attempt to create stash after {time}"), Arg.Any<double>());
+        _logger.Received(1)
+            .LogInformation(Arg.Is("Finished attempt to create stash after {time}ms"), Arg.Any<double>());
     }
 
     [Fact]

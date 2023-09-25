@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Stash_And_Grab.Application.ApiServices;
+using Stash_And_Grab.Api.ApiServices;
+using Stash_And_Grab.Application.ApplicationServices;
 using Stash_And_Grab.Application.DtoModels;
 using Stash_And_Grab.Application.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,24 +18,10 @@ public static class MapEndpoints
                 [SwaggerResponse(400, "Bad Request")]
                 [SwaggerResponse(404, "Not Found")]
                 async ([FromRoute] Guid id, [FromServices] IConfiguration configuration,
-                    [FromServices] ILoggerAdaptor<Program> logger, [FromServices] IApplicationServices service) =>
-                {
-                    try
-                    {
-                        var returnValue = await service.GetItem(id);
-
-                        return returnValue.IsFailed
-                            ? Results.NotFound(returnValue.Reasons)
-                            : Results.Ok(returnValue.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Error getting result for {Id}", id);
-                        throw;
-                    }
-                })
-            .WithName("GET_STASH_ITEM") //e.g. ItemById
-            .WithTags("STASH_AND_GRAB"); //e.g. ItemApi
+                        [FromServices] ILoggerAdaptor<Program> logger, [FromServices] IApplicationServices service) =>
+                    await ApiService.HandleGetItemRequest(id, service, logger))
+            .WithName(RoutingConstants.GetStashItem) //e.g. ItemById
+            .WithTags(RoutingConstants.StashAndGrab); //e.g. ItemApi
 
         app.MapPost("/stash",
                 [SwaggerOperation(Summary = "Create a stash entry",
@@ -43,23 +30,9 @@ public static class MapEndpoints
                 [SwaggerResponse(400, "Bad Request")]
                 [SwaggerResponse(404, "Not Found")]
                 async ([FromBody] StashCreateDtoModel item, [FromServices] IConfiguration configuration,
-                    [FromServices] ILoggerAdaptor<Program> logger, [FromServices] IApplicationServices service) =>
-                {
-                    try
-                    {
-                        var returnValue = await service.CreateStashItem(item);
-
-                        return returnValue.IsFailed
-                            ? Results.BadRequest(returnValue.Reasons)
-                            : Results.Created($"/stats/{returnValue.Value.Id}", returnValue.Value.Id);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Error creating {@Item}", item);
-                        throw;
-                    }
-                })
-            .WithName("CREATE_STASH_ITEM") //e.g. CreateStashItem
-            .WithTags("STASH_AND_GRAB"); //e.g. ItemApi
+                        [FromServices] ILoggerAdaptor<Program> logger, [FromServices] IApplicationServices service) =>
+                    await ApiService.HandleCreateStashRequest(item, service, logger))
+            .WithName(RoutingConstants.CreateStashItem) //e.g. CreateStashItem
+            .WithTags(RoutingConstants.StashAndGrab); //e.g. ItemApi
     }
 }

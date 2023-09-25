@@ -8,7 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Stash_And_Grab.Application.ApiServices;
+using Stash_And_Grab.Api;
+using Stash_And_Grab.Application.ApplicationServices;
 using Stash_And_Grab.Application.Logging;
 using Stash_And_Grab.Application.ResponseModels;
 

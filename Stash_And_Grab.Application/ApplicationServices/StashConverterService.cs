@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Stash_And_Grab.Application.ApiServices;
+namespace Stash_And_Grab.Application.ApplicationServices;
 
 internal static class StashConverterService
 {

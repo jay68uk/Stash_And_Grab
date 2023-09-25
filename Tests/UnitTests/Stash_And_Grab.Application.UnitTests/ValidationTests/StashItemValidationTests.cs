@@ -1,6 +1,6 @@
 ﻿using Stash_And_Grab.Application.DtoModels;
 
-namespace Stash_And_Grab.Application.UnitTests;
+namespace Stash_And_Grab.Application.UnitTests.ValidationTests;
 
 public class StashItemValidationTests
 {

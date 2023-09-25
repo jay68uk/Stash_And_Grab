@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace Stash_And_Grab.Application.ApiServices;
+namespace Stash_And_Grab.Application.ApplicationServices;
 
 public interface IApplicationServices
 {

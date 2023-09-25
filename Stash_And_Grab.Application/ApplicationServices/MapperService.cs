@@ -1,6 +1,6 @@
 ﻿using Stash_And_Grab.Application.Interfaces;
 
-namespace Stash_And_Grab.Application.ApiServices;
+namespace Stash_And_Grab.Application.ApplicationServices;
 
 internal static class MapperService
 {

@@ -43,6 +43,9 @@ finally
     Log.CloseAndFlush();
 }
 
-public partial class Program
+namespace Stash_And_Grab.Api
 {
+    public class Program
+    {
+    }
 }
