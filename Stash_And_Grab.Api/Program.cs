@@ -12,12 +12,13 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 
-Log.Information("Starting web application");
+Log.Information("Starting web application before try");
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Host.UseSerilog();
     builder.Services.RegisterLibraryServices();
     builder.Services.RegisterInMemoryDataServices();
     builder.Services.RegisterServices();
@@ -45,7 +46,7 @@ finally
 
 namespace Stash_And_Grab.Api
 {
-    public class Program
+    public abstract class Program
     {
     }
 }
